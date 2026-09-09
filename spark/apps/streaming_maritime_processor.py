@@ -74,6 +74,7 @@ from pyspark.sql.functions import (
     lit,
     month,
     quarter,
+    row_number,
     struct,
     to_date,
     to_json,
@@ -82,6 +83,7 @@ from pyspark.sql.functions import (
     when,
     year,
 )
+from pyspark.sql.window import Window
 from pyspark.sql.types import (
     DoubleType,
     IntegerType,
@@ -534,6 +536,10 @@ def _write_partition_to_postgis(partition_iter: Iterator) -> None:
             now_utc,
         ))
 
+    # Sort values deterministically by mmsi (index 0) to enforce uniform lock acquisition order
+    # across concurrent transactions, preventing PostgreSQL 40P01 deadlocks.
+    values.sort(key=lambda x: x[0])
+
     conn = None
     cur = None
     try:
@@ -568,7 +574,9 @@ def upsert_fleet_state(batch_df: DataFrame, batch_id: int) -> None:
     foreachBatch handler for Sink A (PostGIS active_fleet_state).
 
     Filters rows with null LAT/LON (cannot upsert spatially without position),
-    then routes each Spark partition to _write_partition_to_postgis via
+    deduplicates by MMSI to keep only the latest record per vessel within the
+    micro-batch, repartitions by MMSI to isolate keys to dedicated executor
+    partitions, and routes each partition to _write_partition_to_postgis via
     foreachPartition -- exactly one DB connection per partition, never per row.
 
     Parameters
@@ -579,12 +587,25 @@ def upsert_fleet_state(batch_df: DataFrame, batch_id: int) -> None:
         Monotonically increasing batch sequence number.
     """
     spatial_df = batch_df.filter(col("LAT").isNotNull() & col("LON").isNotNull())
+
+    # 1. Deduplicate within micro-batch: retain only the latest record per vessel
+    window_spec = Window.partitionBy("MMSI").orderBy(col("BaseDateTime").desc_nulls_last())
+    spatial_df = (
+        spatial_df
+        .withColumn("_rn", row_number().over(window_spec))
+        .filter(col("_rn") == 1)
+        .drop("_rn")
+    )
+
     count = spatial_df.count()
     if count == 0:
         log.info(
             "Sink A (PostGIS) batch %d: no rows with valid LAT/LON, skipping.", batch_id
         )
         return
+
+    # 2. Partition by key (MMSI) to eliminate concurrent cross-task lock contention
+    spatial_df = spatial_df.repartition(4, "mmsi")
 
     log.info("Sink A (PostGIS) batch %d: upserting %d rows.", batch_id, count)
     try:

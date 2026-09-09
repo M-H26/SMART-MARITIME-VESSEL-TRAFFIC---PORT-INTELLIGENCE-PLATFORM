@@ -7,7 +7,11 @@ x-airflow-common-env: &airflow-common-env
   AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
   AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
   AIRFLOW__CORE__FERNET_KEY: ""
-  AIRFLOW__WEBSERVER__SECRET_KEY: "change-me-please"
+  AIRFLOW__WEBSERVER__SECRET_KEY: "maritime_secure_secret_key_airflow_2026"
+  AIRFLOW__WEBSERVER__WTF_CSRF_ENABLED: "False"
+  AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX: "True"
+  AIRFLOW__WEBSERVER__COOKIE_SECURE: "False"
+  AIRFLOW__WEBSERVER__COOKIE_SAMESITE: "Lax"
   HDFS_NAMENODE: "hdfs://namenode:9000"
   SPARK_MASTER: "spark://spark-master:7077"
   KAFKA_BOOTSTRAP: "kafka:9092"
@@ -71,7 +75,7 @@ services:
     networks: [maritime-network]
 
   # -------------------------------------------------------------------------
-  # Mahout - batch ML on Hadoop
+  # Mahout - batch ML on Hadoop / Zeppelin Interactive Analytics
   # -------------------------------------------------------------------------
   mahout:
     # apache/mahout:14.1 does NOT exist on Docker Hub (was a bug in the
@@ -87,11 +91,19 @@ services:
     environment:
       HADOOP_CONF_DIR: /etc/hadoop
       HADOOP_HOME: /opt/hadoop
-    # This image's default entrypoint starts the Zeppelin notebook server
-    # itself, so it stays "Up" on its own — no keep-alive override needed.
-    # Zeppelin UI (if you want to use it directly): exposed on port 8080
-    # inside the container — add a host port mapping here if needed, e.g.
-    # ports: ["8091:8080"], once you know it won't collide with Spark's UI.
+      SPARK_MASTER: "spark://spark-master:7077"
+      PYTHONPATH: "/opt/mahout_workspace/libs:/opt/mahout_workspace"
+    ports:
+      - "8091:8080"
+    volumes:
+      - ./mahout:/opt/mahout_workspace
+      - ./mahout/zeppelin_notebooks:/zeppelin/notebook
+      - ./mahout/postgresql-42.6.0.jar:/zeppelin/interpreter/jdbc/postgresql-42.6.0.jar
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2.0"
     networks: [maritime-network]
 
   # -------------------------------------------------------------------------
@@ -118,7 +130,12 @@ services:
   # Packages pinned to match SPARK_IMAGE_TAG (3.3.0)
   # -------------------------------------------------------------------------
   spark-master:
-    image: bde2020/spark-master:${SPARK_IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: ./spark/docker/Dockerfile.master
+      args:
+        SPARK_IMAGE_TAG: ${SPARK_IMAGE_TAG}
+    image: bigdata-lab-spark-master:3.3.0
     container_name: spark-master
     hostname: spark-master
     restart: unless-stopped
@@ -128,6 +145,8 @@ services:
     environment:
       - INIT_DAEMON_STEP=setup_spark
       - SPARK_MASTER_OPTS=-Dspark.jars.packages=org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,org.postgresql:postgresql:42.6.0
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=python3
     ports:
       - "${SPARK_MASTER_UI_PORT}:8080"
       - "${SPARK_MASTER_PORT}:7077"
@@ -136,7 +155,12 @@ services:
     networks: [maritime-network]
 
   spark-worker:
-    image: bde2020/spark-worker:${SPARK_IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: ./spark/docker/Dockerfile.worker
+      args:
+        SPARK_IMAGE_TAG: ${SPARK_IMAGE_TAG}
+    image: bigdata-lab-spark-worker:3.3.0
     container_name: spark-worker
     hostname: spark-worker
     restart: unless-stopped
@@ -146,6 +170,8 @@ services:
       - SPARK_WORKER_MEMORY=3G
       - SPARK_WORKER_CORES=6
       - SPARK_WORKER_OPTS=-Dspark.jars.packages=org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,org.postgresql:postgresql:42.6.0
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=python3
     ports:
       - "${SPARK_WORKER_UI_PORT}:8081"
     volumes:
@@ -278,6 +304,7 @@ services:
       POSTGIS_USER: ${POSTGIS_USER}
       POSTGIS_PASSWORD: ${POSTGIS_PASSWORD}
       POSTGIS_DB: ${POSTGIS_DB}
+      MAPBOX_API_KEY: ${MAPBOX_API_KEY:-}
     entrypoint: >
       bash -c "
       pip install --no-cache-dir psycopg2-binary >/dev/null &&
@@ -289,6 +316,7 @@ services:
       "
     volumes:
       - superset_home:/app/superset_home
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
     networks: [maritime-network]
 
   superset:
@@ -300,12 +328,15 @@ services:
         condition: service_completed_successfully
     environment:
       SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
+      MAPBOX_API_KEY: ${MAPBOX_API_KEY:-}
     command: >
       bash -c "pip install --no-cache-dir psycopg2-binary >/dev/null && /usr/bin/run-server.sh"
     ports:
       - "${SUPERSET_PORT}:8088"
     volumes:
       - superset_home:/app/superset_home
+      - ./superset:/opt/superset-scripts:ro
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
     networks: [maritime-network]
 
   # -------------------------------------------------------------------------
@@ -392,6 +423,11 @@ services:
         condition: service_completed_successfully
     environment:
       <<: *airflow-common-env
+      AIRFLOW__WEBSERVER__SECRET_KEY: "maritime_secure_secret_key_airflow_2026"
+      AIRFLOW__WEBSERVER__WTF_CSRF_ENABLED: "False"
+      AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX: "True"
+      AIRFLOW__WEBSERVER__COOKIE_SECURE: "False"
+      AIRFLOW__WEBSERVER__COOKIE_SAMESITE: "Lax"
     command: webserver
     ports:
       - "${AIRFLOW_WEBSERVER_PORT}:8080"

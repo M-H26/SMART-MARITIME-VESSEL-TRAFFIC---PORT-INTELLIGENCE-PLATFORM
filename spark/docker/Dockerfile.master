@@ -1,0 +1,13 @@
+﻿ARG SPARK_IMAGE_TAG=3.3.0-hadoop3.3
+FROM bde2020/spark-master:${SPARK_IMAGE_TAG}
+
+# Switch Alpine package mirrors from http to https to avoid network redirects & 404s
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/main" > /etc/apk/repositories \
+ && echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories \
+ && apk update \
+ && apk add --no-cache python3 py3-pip py3-numpy \
+ && python3 -m pip install --no-cache-dir pg8000
+
+# Enforce Python 3 for PySpark driver and executor processes
+ENV PYSPARK_PYTHON=python3
+ENV PYSPARK_DRIVER_PYTHON=python3

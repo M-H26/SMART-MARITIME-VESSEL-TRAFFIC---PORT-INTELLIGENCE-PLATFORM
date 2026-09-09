@@ -93,13 +93,15 @@ if ($hdfsReady) {
     Write-Host " [WARNING] Could not toggle HDFS SafeMode automatically. Run manually: docker compose exec namenode hdfs dfsadmin -safemode leave" -ForegroundColor DarkYellow
 }
 
-# 5. Ensure pg8000 is installed in spark-master and spark-worker
-Write-Host "`n[5/5] Ensuring pg8000 Python driver is installed in Spark containers..." -ForegroundColor Yellow
-Write-Host " -> Installing in spark-master..." -NoNewline
+# 5. Ensure Python dependencies (numpy, pg8000) are installed in spark-master and spark-worker
+Write-Host "`n[5/5] Ensuring Python dependencies (numpy, pg8000) are ready in Spark containers..." -ForegroundColor Yellow
+Write-Host " -> Checking & ensuring dependencies in spark-master..." -NoNewline
+docker compose exec -T spark-master sh -c 'python3 -c "import numpy" 2>/dev/null || (echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/main" > /etc/apk/repositories && echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories && apk update -q && apk add --no-cache py3-numpy -q)' *>$null
 docker compose exec -T spark-master pip3 install --no-cache-dir --disable-pip-version-check -q pg8000 *>$null
 Write-Host " DONE" -ForegroundColor Green
 
-Write-Host " -> Installing in spark-worker..." -NoNewline
+Write-Host " -> Checking & ensuring dependencies in spark-worker..." -NoNewline
+docker compose exec -T spark-worker sh -c 'python3 -c "import numpy" 2>/dev/null || (echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/main" > /etc/apk/repositories && echo "https://dl-cdn.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories && apk update -q && apk add --no-cache py3-numpy -q)' *>$null
 docker compose exec -T spark-worker pip3 install --no-cache-dir --disable-pip-version-check -q pg8000 *>$null
 Write-Host " DONE" -ForegroundColor Green
 
