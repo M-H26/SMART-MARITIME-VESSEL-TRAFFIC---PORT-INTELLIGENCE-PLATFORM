@@ -1,0 +1,70 @@
+-- ============================================================================
+-- Smart Maritime Vessel Traffic & Port Intelligence Platform
+-- PostGIS Serving-Storage Schema
+-- ============================================================================
+--
+-- Team Assignment: Spatial Database Engineer (الفرد الرابع)
+--
+-- This script runs automatically on first container initialisation
+-- (mounted at /docker-entrypoint-initdb.d/). It only fires against an
+-- EMPTY data volume — delete the postgis_data Docker volume to re-run.
+--
+-- ============================================================================
+
+-- Enable PostGIS spatial extensions (required — do NOT remove)
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS postgis_topology;
+
+-- ============================================================================
+-- TODO: Define the serving-layer tables below.
+--
+-- Recommended tables (from the project proposal):
+--
+--   1. active_fleet_state
+--      Latest known position/speed per vessel. Upserted by the Spark
+--      streaming job.
+--      Suggested columns:
+--        mmsi (BIGINT PRIMARY KEY), vessel_name (VARCHAR(100)),
+--        geom (GEOMETRY(POINT, 4326)), sog_knots (DOUBLE PRECISION),
+--        cog_degrees (DOUBLE PRECISION), heading_degrees (DOUBLE PRECISION),
+--        nav_status (VARCHAR(50)), last_updated (TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP).
+--
+--   2. geofence_boundaries
+--      Port / anchorage / restricted-zone polygons used for geofencing checks.
+--      Suggested columns:
+--        id (SERIAL PRIMARY KEY), port_name (VARCHAR(100)),
+--        zone_type (VARCHAR(50)), country_code (VARCHAR(10)),
+--        geom (GEOMETRY(POLYGON, 4326)).
+--      Seed sample port polygons (e.g. Port Said, Suez Port, Alexandria Port).
+--
+--   3. collision_risk_alerts
+--      Written by the Spark streaming collision-detection module when two
+--      vessels are in close proximity (CPA threshold).
+--      Suggested columns:
+--        id (BIGSERIAL PRIMARY KEY), vessel_1_mmsi (BIGINT), vessel_2_mmsi (BIGINT),
+--        distance_meters (DOUBLE PRECISION), cpa_minutes (DOUBLE PRECISION),
+--        risk_level (VARCHAR(20)), geom (GEOMETRY(POINT, 4326)),
+--        created_at (TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP).
+--
+--   4. port_congestion
+--      Rolling per-port vessel counts and dwell/speed statistics, updated by
+--      the Airflow batch step or Spark streaming aggregations.
+--      Suggested columns:
+--        id (BIGSERIAL PRIMARY KEY), port_id (INT REFERENCES geofence_boundaries(id)),
+--        active_vessels_count (INT), avg_speed_knots (DOUBLE PRECISION),
+--        congestion_risk (VARCHAR(20)), calculated_at (TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP).
+--
+--   5. port_geofence_events
+--      Log of vessel enter/inside/exit events per port (mirrors Kafka topic).
+--      Suggested columns:
+--        id (BIGSERIAL PRIMARY KEY), mmsi (BIGINT),
+--        port_id (INT REFERENCES geofence_boundaries(id)),
+--        event_type (VARCHAR(20)), event_time (TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP).
+--
+-- Design guidelines:
+--   • Use TIMESTAMPTZ for all time columns.
+--   • Add GIST indexes on every geometry column.
+--   • Add B-tree indexes on high-cardinality lookup columns (mmsi, time).
+--   • Use BIGSERIAL for surrogate PKs on event/log tables.
+--   • Keep SRID = 4326 (WGS 84) for all geometries.
+-- ============================================================================
