@@ -144,7 +144,7 @@ services:
     environment:
       - SPARK_MASTER=spark://spark-master:7077
       - SPARK_WORKER_MEMORY=3G
-      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_CORES=6
       - SPARK_WORKER_OPTS=-Dspark.jars.packages=org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,org.postgresql:postgresql:42.6.0
     ports:
       - "${SPARK_WORKER_UI_PORT}:8081"
@@ -320,18 +320,20 @@ services:
     depends_on:
       kafka-topics-init:
         condition: service_completed_successfully
+    command: python /app/ais_stream_producer.py
 
     environment:
       AISSTREAM_API_KEY: ${AISSTREAM_API_KEY}
       KAFKA_BOOTSTRAP: "kafka:9092"
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
       KAFKA_TOPIC: "raw_ais_positions"
       AIS_BOUNDING_BOXES: ${AIS_BOUNDING_BOXES}
-
-      AIS_DATA_DIR: "/data/historical"
+      AIS_DATA_DIR: "/data"
       MAX_ROWS: "0"
 
     volumes:
-      - ./data/historical:/data/historical:ro
+      - ./ais:/app
+      - ./data/historical:/data
 
     networks: [maritime-network]
 
