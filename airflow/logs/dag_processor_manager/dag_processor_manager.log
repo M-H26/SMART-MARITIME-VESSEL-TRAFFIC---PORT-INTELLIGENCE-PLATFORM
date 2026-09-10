@@ -23257,3 +23257,191 @@ File Path                                              PID  Runtime      # DAGs 
 /opt/airflow/dags/maritime_batch_kpi_dag.py            197  0.02s             1           0  0.62s           2026-09-09T23:23:47
 ================================================================================
 [2026-09-09T23:24:31.517+0000] {manager.py:452} INFO - Exiting gracefully upon receiving signal 15
+[2026-09-10T00:20:31.171+0000] {manager.py:470} INFO - Processing files using up to 2 processes at a time 
+[2026-09-10T00:20:31.175+0000] {manager.py:471} INFO - Process each file at most once every 30 seconds
+[2026-09-10T00:20:31.176+0000] {manager.py:472} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2026-09-10T00:20:31.179+0000] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2026-09-10T00:20:31.315+0000] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2026-09-10T00:20:31.462+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  ----------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            177  0.08s             0           0
+/opt/airflow/dags/maritime_intelligence_pipeline.py    180  0.05s             0           0
+================================================================================
+[2026-09-10T00:21:01.911+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py                                   1           0  0.64s           2026-09-10T00:20:32
+/opt/airflow/dags/maritime_intelligence_pipeline.py    187  0.01s             1           0  0.26s           2026-09-10T00:20:31
+================================================================================
+[2026-09-10T00:21:32.396+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            197  0.03s             1           0  0.22s           2026-09-10T00:21:02
+/opt/airflow/dags/maritime_intelligence_pipeline.py    200  0.01s             1           0  0.15s           2026-09-10T00:21:02
+================================================================================
+[2026-09-10T00:22:02.808+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            207  0.02s             1           0  0.19s           2026-09-10T00:21:32
+/opt/airflow/dags/maritime_intelligence_pipeline.py    210  0.01s             1           0  0.15s           2026-09-10T00:21:32
+================================================================================
+[2026-09-10T00:22:33.185+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            217  0.02s             1           0  0.15s           2026-09-10T00:22:02
+/opt/airflow/dags/maritime_intelligence_pipeline.py    220  0.00s             1           0  0.12s           2026-09-10T00:22:02
+================================================================================
+[2026-09-10T00:23:03.556+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            227  0.03s             1           0  0.15s           2026-09-10T00:22:33
+/opt/airflow/dags/maritime_intelligence_pipeline.py    230  0.01s             1           0  0.11s           2026-09-10T00:22:33
+================================================================================
+[2026-09-10T00:23:33.953+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            237  0.02s             1           0  0.19s           2026-09-10T00:23:03
+/opt/airflow/dags/maritime_intelligence_pipeline.py    240  0.00s             1           0  0.15s           2026-09-10T00:23:03
+================================================================================
+[2026-09-10T00:24:04.539+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            247  0.02s             1           0  0.40s           2026-09-10T00:23:34
+/opt/airflow/dags/maritime_intelligence_pipeline.py    250  0.00s             1           0  0.32s           2026-09-10T00:23:34
+================================================================================
+[2026-09-10T00:24:35.085+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            257  0.02s             1           0  0.30s           2026-09-10T00:24:04
+/opt/airflow/dags/maritime_intelligence_pipeline.py    260  0.00s             1           0  0.26s           2026-09-10T00:24:04
+================================================================================
+[2026-09-10T00:25:05.740+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            267  0.02s             1           0  0.29s           2026-09-10T00:24:35
+/opt/airflow/dags/maritime_intelligence_pipeline.py    270  0.00s             1           0  0.27s           2026-09-10T00:24:35
+================================================================================
+[2026-09-10T00:25:32.070+0000] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2026-09-10T00:25:32.113+0000] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2026-09-10T00:25:36.180+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            277  0.02s             1           0  0.15s           2026-09-10T00:25:05
+/opt/airflow/dags/maritime_intelligence_pipeline.py    280  0.00s             1           0  0.12s           2026-09-10T00:25:05
+================================================================================
+[2026-09-10T00:26:06.567+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            287  0.02s             1           0  0.15s           2026-09-10T00:25:36
+/opt/airflow/dags/maritime_intelligence_pipeline.py    290  0.01s             1           0  0.11s           2026-09-10T00:25:36
+================================================================================
+[2026-09-10T00:26:36.990+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            297  0.02s             1           0  0.15s           2026-09-10T00:26:06
+/opt/airflow/dags/maritime_intelligence_pipeline.py    300  0.00s             1           0  0.13s           2026-09-10T00:26:06
+================================================================================
+[2026-09-10T00:27:07.376+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            307  0.02s             1           0  0.14s           2026-09-10T00:26:37
+/opt/airflow/dags/maritime_intelligence_pipeline.py    310  0.00s             1           0  0.11s           2026-09-10T00:26:37
+================================================================================
+[2026-09-10T00:27:37.839+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            317  0.03s             1           0  0.14s           2026-09-10T00:27:07
+/opt/airflow/dags/maritime_intelligence_pipeline.py    320  0.00s             1           0  0.11s           2026-09-10T00:27:07
+================================================================================
+[2026-09-10T00:28:08.264+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            327  0.02s             1           0  0.15s           2026-09-10T00:27:37
+/opt/airflow/dags/maritime_intelligence_pipeline.py    330  0.00s             1           0  0.11s           2026-09-10T00:27:37
+================================================================================
+[2026-09-10T00:28:38.680+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            337  0.02s             1           0  0.13s           2026-09-10T00:28:08
+/opt/airflow/dags/maritime_intelligence_pipeline.py    340  0.00s             1           0  0.10s           2026-09-10T00:28:08
+================================================================================
+[2026-09-10T00:29:09.141+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            347  0.02s             1           0  0.19s           2026-09-10T00:28:38
+/opt/airflow/dags/maritime_intelligence_pipeline.py    350  0.00s             1           0  0.16s           2026-09-10T00:28:38
+================================================================================
+[2026-09-10T00:29:39.679+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            357  0.03s             1           0  0.18s           2026-09-10T00:29:09
+/opt/airflow/dags/maritime_intelligence_pipeline.py    360  0.00s             1           0  0.15s           2026-09-10T00:29:09
+================================================================================
+[2026-09-10T00:30:10.055+0000] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                              PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+---------------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/maritime_batch_kpi_dag.py            367  0.04s             1           0  0.15s           2026-09-10T00:29:39
+/opt/airflow/dags/maritime_intelligence_pipeline.py    370  0.01s             1           0  0.12s           2026-09-10T00:29:39
+================================================================================
+[2026-09-10T00:30:23.860+0000] {manager.py:452} INFO - Exiting gracefully upon receiving signal 15
