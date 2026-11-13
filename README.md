@@ -573,3 +573,18 @@ WHERE c.kpi_date = '2024-12-25' AND c.is_anomaly = TRUE
 LIMIT 5;
 "
 ```
+## Contributors
+
+- **Mohamed Hany Hamouda**
+- **Mahmoud Gad**
+- **Moustafa Mortada**
+- **Youssef Fetyan**
+- **Saleh Osama**
+
+- ## Author
+
+**ENG. Mohamed Hany Hamouda**
+
+Computer Science Student — Data Science Major
+
+- GitHub: [M-H26](https://github.com/M-H26)
